@@ -1,16 +1,43 @@
+DROP DATABASE IF EXISTS employee_db;
+CREATE database employee_db;
+
 USE employee_db;
--- company departments --
-INSERT INTO department (id, name)
-VALUES (1, 'Sales'),
-       (2, 'Finance'),
-       (3, 'Marketing'),
-       (4, 'Engineering'),
-       (5, 'IT'),
-       (6, 'Research'),
-       (7, 'Opperations'),
-       (8, 'Legal');
+
+CREATE TABLE department (
+    id INT AUTO_INCREMENT,
+    name VARCHAR(30) NOT NULL,
+    PRIMARY KEY (id)
+);
 
 
+CREATE TABLE role (
+    id INT AUTO_INCREMENT,
+    title VARCHAR(30), 
+    salary DECIMAL,
+    department_id INT,
+    PRIMARY KEY (id)
+);
+
+
+CREATE TABLE employee (
+    id INT AUTO_INCREMENT,
+    first_name VARCHAR(30),
+    last_name VARCHAR(30), 
+    role_id INT,
+    manager_id INT,
+    PRIMARY KEY (id)
+);
+
+
+-- seed data input
+INSERT INTO department (name) VALUES ('Sales'),
+									('Finance'),
+									('Marketing'),
+									('Engineering'),
+									('IT'),
+									('Research'),
+									('Opperations'),
+									('Legal');
 
 -- company roles --
 INSERT INTO role (title, salary, department_id) 
@@ -34,8 +61,6 @@ VALUES
 
 
 
-
-
 -- company stake holder employees --
 INSERT INTO employee (first_name, last_name, role_id, manager_id) 
 VALUES 
@@ -56,4 +81,6 @@ VALUES
 ('Benny', 'SleepingJets', 71, 70),
 ('Empty', 'Suit', 80, NULL);
 
-
+SELECT * FROM  department;
+SELECT * FROM  role;
+SELECT * FROM  employee;
