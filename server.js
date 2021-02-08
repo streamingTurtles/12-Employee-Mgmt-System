@@ -14,6 +14,52 @@ const connection = mysql.createConnection({
 // check db connection
 connection.connect((err) => {
     if (err) throw err;
-    console.log('connected as id ' + connection.threadId);
-    connection.end();
+    // console.log('connected as id ' + connection.threadId); // testing code
+    // connection.end();  // testing code
   });
+
+
+// Prompt the user "what they want to do" when program starts
+const query_employee_db = () => inquirer.prompt([
+    {
+        name: 'action',
+        type: 'list',
+        message: 'Select what you would like to do:',
+        choices: [
+            'Add New Company Department',
+            'Add New Company Role',
+            'Add New Employee',
+            'View Company Departments',
+            'View Company Roles',
+            'View Company Employees',
+            'Update an Employees Role',
+            // Bonus questions to query
+            'Update an Employees Manager',
+            'View Employees by their Managers',
+            'Delete a Company Department', 
+            'Delete a Company Role', 
+            'Delete an Employee',
+            'EXIT the APPLICATION',    
+        ]
+    }
+]).then (answer =>{
+    switch(answer.action){
+        case 'Add New Company Department': sqlQuery_1(); break;
+        case 'Add New Company Role': sqlQuery_2(); break;
+        case 'Add New Employee': sqlQuery_3(); break;
+        case 'View Company Departments': sqlQuery_4(); break;
+        case 'View Company Roles': sqlQuery_5(); break;
+        case 'View Company Employees': sqlQuery_6(); break;
+        case 'Update an Employees Role': sqlQuery_7(); break;
+        // Bonus questions to query 
+        case 'Update an Employees Manager': sqlQuery_8(); break;
+        case 'View Employees by their Managers': sqlQuery_9(); break;
+        case 'Delete a Company Department': sqlQuery_10(); break;
+        case 'Delete a Company Role': sqlQuery_11(); break;
+        case 'Delete an Employee': sqlQuery_12(); break;
+        case 'EXIT the APPLICATION': connection.end(); break;
+    }
+});
+
+// begin command prompt questions
+query_employee_db()
