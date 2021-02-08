@@ -16,6 +16,7 @@ connection.connect((err) => {
     if (err) throw err;
     // console.log('connected as id ' + connection.threadId); // testing code
     // connection.end();  // testing code
+    query_employee_db();  // inquirer function, Prompting questions in the console
   });
 
 
@@ -61,5 +62,37 @@ const query_employee_db = () => inquirer.prompt([
     }
 });
 
-// begin command prompt questions
-query_employee_db()
+
+
+
+
+// Add New Company Department
+const sqlQuery_1 = () => {
+}
+const sqlQuery_2 = () => {
+}
+const sqlQuery_3 = () => {
+}
+// View Company Departments
+const sqlQuery_4 = () => {
+    connection.query(`SELECT * from department`, function(err, res) {       
+    console.table(res);
+    query_employee_db();
+    });
+};
+const sqlQuery_5 = () => {
+}
+const sqlQuery_6 = () => {
+}
+const sqlQuery_7 = () => {
+}
+const sqlQuery_8 = () => {
+}
+const sqlQuery_9 = () => {
+}
+const sqlQuery_10 = () => {
+}
+const sqlQuery_11 = () => {
+}
+const sqlQuery_12 = () => {
+}
