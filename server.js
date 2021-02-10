@@ -3,6 +3,7 @@ const inquirer = require('inquirer');
 const mysql = require('mysql');
 const appName = require('asciiart-logo');
 require('console.table');
+const dotenv = require('dotenv').config();
 
 
 // db connection settings for localhost
@@ -10,14 +11,17 @@ const connection = mysql.createConnection({
     host: 'localhost',
     port: 3306,
     user: 'root',
-    password: 'mysqlforme2912PAC!',
-    database: 'employee_db',
+    // password: 'xxxx',  // removed my password, in the .env living in gitignore
+    password: process.env.PASSWORD,   
+    database: 'employee_db',    
 });
+
+
 
 // check db connection
 connection.connect((err) => {
     if (err) throw err;
-    // console.log('connected as id ' + connection.threadId); // testing code
+    console.log('connected as id ' + connection.threadId); // testing the connection
     // connection.end();  // testing code
     query_employee_db();  // inquirer function, Prompting questions in the console
 });
