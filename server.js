@@ -1,6 +1,9 @@
 // get modules
 const inquirer = require('inquirer');
 const mysql = require('mysql');
+const appName = require('asciiart-logo');
+require('console.table');
+
 
 // db connection settings for localhost
 const connection = mysql.createConnection({
@@ -18,6 +21,19 @@ connection.connect((err) => {
     // connection.end();  // testing code
     query_employee_db();  // inquirer function, Prompting questions in the console
 });
+
+
+
+// Diplays Title of the application
+function init(){
+    const appTitle = appName({ name: "HW 12: Employee Management System" }).render();  
+    console.log(appTitle);      
+  }
+init();
+
+
+
+
 
 
 // Prompt the user "what they want to do" when program starts
@@ -38,11 +54,11 @@ const query_employee_db = () => inquirer.prompt
                     'View Company Employees',
                     'Update an Employees Role',
                     // Bonus questions to query
-                    'Update an Employees Manager',
-                    'View Employees by their Managers',
+                    // 'Update an Employees Manager',  // not implemented - future
+                    // 'View Employees by their Managers',  // not implemented - future
                     'Delete a Company Department', 
                     'Delete a Company Role', 
-                    'Delete an Employee',
+                    // 'Delete an Employee',  // not implemented - future
                     'EXIT the APPLICATION',    
                 ],
             },
@@ -353,5 +369,71 @@ const sqlQuery_11 = async () => {
         }
     );    
 }; 
+// *********************************************************************** //
+// *********************************************************************** //
+
+
+
+
+
+
+
+
+
+
+
+
+// *********************************************************************** //
+// *********************************************************************** //
+// UPDATE from employee_db CONTENTS:
+// *********************************************************************** //
+// *********************************************************************** //
+// 1st create array of current employee's from which to select the employee to update their role_id
+// This array is used to select the employee who's role_id is being updated.
+// const roleIDNumber = () =>  {
+//     const currentEMP = [];
+//     return new Promise (function(resolve,reject){
+        
+//         connection.query(
+//             `SELECT CONCAT (employee.first_name, ' ', employee.last_name) as EMP_Name FROM employee_db.employee`,
+//              (err, res) =>{
+//                  if (err) reject (err);
+
+//                  for (let i=0; i < res.length; i++){
+//                      currentEMP.push(res[i].EMP_Name)
+//                  }
+//                  resolve(currentEMP);
+//              }   
+//         )
+//     })
+  
+// }
+// // Update and employee's role, know as: role_id in the employee_db
+// const sqlQuery_7 = async () => {
+//     const currentEMP = await roleIDNumber();
+//     inquirer.prompt([
+//         {    
+//          type: 'list',
+//          name: 'EmployeeRoleID',
+//          message: 'Please Select the Employee you will be updating',
+//         choices: currentEMP,
+//         },
+//     ])
+//     .then(answer => 
+//         {
+//             connection.query(
+//                     `DELETE FROM role_id WHERE (title) = (?)`,
+//                     answer.companyRole,
+//                     function(err, res)
+//                     {
+//                         if (err) throw err;
+//                         console.log(`You just DELETED the following new Compnay Department ${answer.companyRole}`);
+//                         query_employee_db()
+//                     }
+//             );
+//         }
+//     );    
+// }; 
+
 // *********************************************************************** //
 // *********************************************************************** //
