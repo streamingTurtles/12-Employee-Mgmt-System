@@ -78,15 +78,15 @@ const query_employee_db = () => inquirer.prompt
                 case 'View Company Departments': sqlQuery_4(); break;   // ok, confirmed working
                 case 'View Company Roles': sqlQuery_5(); break; //  ok, confirmed working
                 case 'View Company Employees': sqlQuery_6(); break; // ok, confirmed working
-                case 'View Employee Role_id & Manager_id': sqlQuery_61(); break; // ok, confirmed working
+                case 'View Employee Role_id & Manager_id': sqlQuery_61(); break; // ok, confirmed working - BONUS addition, shows employees by managers
                 case 'Update an Employees Role ID#': sqlQuery_7(); break; // ok, confirmed working
                 // Bonus questions to query 
                 case 'Update an Employees Manager': sqlQuery_8(); break;
                 case 'View Employees by their Managers': sqlQuery_9(); break;
-                case 'Delete a Company Department': sqlQuery_10(); break; // ok, confirmed working
-                case 'Delete a Company Role': sqlQuery_11(); break; // ok, confirmed working
+                case 'Delete a Company Department': sqlQuery_10(); break; // ok, confirmed working - BONUS
+                case 'Delete a Company Role': sqlQuery_11(); break; // ok, confirmed working - BONUS 
                 case 'Delete an Employee': sqlQuery_12(); break;
-                case 'EXIT the APPLICATION': connection.end(); break; // ok, confirmed working
+                case 'EXIT the APPLICATION': connection.end(); break; // ok, confirmed working - BONUS
             }
         }
 );
