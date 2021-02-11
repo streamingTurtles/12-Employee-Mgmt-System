@@ -56,7 +56,8 @@ const query_employee_db = () => inquirer.prompt
                     'View Company Departments',
                     'View Company Roles',
                     'View Company Employees',
-                    'Update an Employees Role',
+                    'View Employee Role_id & Manager_id',
+                    'Update an Employees Role ID#',
                     // Bonus questions to query
                     // 'Update an Employees Manager',  // not implemented - future
                     // 'View Employees by their Managers',  // not implemented - future
@@ -77,7 +78,8 @@ const query_employee_db = () => inquirer.prompt
                 case 'View Company Departments': sqlQuery_4(); break;   // ok, confirmed working
                 case 'View Company Roles': sqlQuery_5(); break; //  ok, confirmed working
                 case 'View Company Employees': sqlQuery_6(); break; // ok, confirmed working
-                case 'Update an Employees Role': sqlQuery_7(); break;
+                case 'View Employee Role_id & Manager_id': sqlQuery_61(); break; // ok, confirmed working
+                case 'Update an Employees Role ID#': sqlQuery_7(); break; // ok, confirmed working
                 // Bonus questions to query 
                 case 'Update an Employees Manager': sqlQuery_8(); break;
                 case 'View Employees by their Managers': sqlQuery_9(); break;
@@ -96,7 +98,7 @@ const query_employee_db = () => inquirer.prompt
 
 // *********************************************************************** //
 // *********************************************************************** //
-// ADDING To the employee_db CONTENTS:
+// ADDING - To the employee_db CONTENTS:
 // *********************************************************************** //
 // *********************************************************************** //
 // Add New Company Department
@@ -211,7 +213,7 @@ const sqlQuery_3 = () => {
 
 // *********************************************************************** //
 // *********************************************************************** //
-// VIEWING the employee_db CONTENTS:
+// VIEWING - the employee_db CONTENTS:
 // *********************************************************************** //
 // *********************************************************************** //
 // View Company Departments
@@ -232,9 +234,17 @@ const sqlQuery_5 = () => {
 
 // View Company Employees
 const sqlQuery_6 = () => {
-    connection.query(`SELECT first_name, last_name FROM employee`, function(err, res){
-        console.table(res);
-        query_employee_db();
+    connection.query(`SELECT first_name, last_name FROM employee`, function(err, res){                
+    console.table(res);
+    query_employee_db();
+    });
+};
+
+// View Employees Role_id & Manager_id
+const sqlQuery_61 = () => { 
+    connection.query(`SELECT * FROM employee`, function(err, res){             
+    console.table(res);
+    query_employee_db();
     });
 };
 // *********************************************************************** //
@@ -256,7 +266,7 @@ const sqlQuery_6 = () => {
 
 // *********************************************************************** //
 // *********************************************************************** //
-// DELETING from employee_db CONTENTS:
+// DELETING - from employee_db CONTENTS:
 // *********************************************************************** //
 // *********************************************************************** //
 // Current Array contents of the Company table, Department 
@@ -286,11 +296,7 @@ const depts = () =>  {
 }
 // Delete a Company department
 const sqlQuery_10 = async () => {
-    // const currentDeptList = [];
-    // const currentRoleList = [];
-    // const currentEmpList = [];
     const currentDeptList = await depts();
-    // console.log(deptmst);
     inquirer.prompt([
         {    
          type: 'list',
@@ -329,14 +335,11 @@ const roles = () =>  {
             `SELECT CONCAT (role.title) as role FROM employee_db.role`,
              (err, res) =>{
                  if (err) reject (err);
-
                  for (let i=0; i < res.length; i++){
                      currentRoleList.push(res[i].role)
-                    //  console.log('currentDepList contains: ', currentRoleList);
                  }
                  resolve(currentRoleList);
-                //  console.log('currentDepList contains: ', currentRoleList);
-                //  console.table(currentRoleList);
+                //  console.log(currentRoleList); // testing
              }   
         )
     })
@@ -344,18 +347,13 @@ const roles = () =>  {
 }
 // Delete a Company Role
 const sqlQuery_11 = async () => {
-    // const currentRoleList = [];
-    // const currentRoleList = [];
-    // const currentEmpList = [];
     const currentRoleList = await roles();
-    // console.log(deptmst);
     inquirer.prompt([
         {    
          type: 'list',
          name: 'companyRole',
          message: 'Please Select the Department you will be deleting',
-        //  choices: function(name){ return currentRoleList},
-        choices: currentRoleList,
+         choices: currentRoleList,
         },
     ])
     .then(answer => 
@@ -389,55 +387,72 @@ const sqlQuery_11 = async () => {
 
 // *********************************************************************** //
 // *********************************************************************** //
-// UPDATE from employee_db CONTENTS:
+// UPDATES - to employee_db CONTENTS:
 // *********************************************************************** //
 // *********************************************************************** //
-// 1st create array of current employee's from which to select the employee to update their role_id
+// 1st create array of current employee's for use to present as the list of employees
+// from which to select to update their role_id
 // This array is used to select the employee who's role_id is being updated.
-// const roleIDNumber = () =>  {
-//     const currentEMP = [];
-//     return new Promise (function(resolve,reject){
-        
-//         connection.query(
-//             `SELECT CONCAT (employee.first_name, ' ', employee.last_name) as EMP_Name FROM employee_db.employee`,
-//              (err, res) =>{
-//                  if (err) reject (err);
-
-//                  for (let i=0; i < res.length; i++){
-//                      currentEMP.push(res[i].EMP_Name)
-//                  }
-//                  resolve(currentEMP);
-//              }   
-//         )
-//     })
+// We need to concantenate the first & last name to uniquely identify the employee.
+// We need to return the resulting array as a promise to address the asynchronous
+// behavior of when prompting the question in the inqirer.prompt() function.
+const roleIDNumber = () =>  {
+    const currentEMP = [];
+    return new Promise (function(resolve,reject){        
+        connection.query(
+            `SELECT CONCAT (employee.first_name, ' ', employee.last_name) AS first_last_name FROM employee_db.employee`,
+             (err, res) =>{
+                 if (err) reject (err);
+                 for (let i=0; i < res.length; i++){
+                     currentEMP.push(res[i].first_last_name)
+                 }
+                 resolve(currentEMP);
+                //  console.log(currentEMP);  // I get the array, 
+             }   
+        )
+    })
   
-// }
-// // Update and employee's role, know as: role_id in the employee_db
-// const sqlQuery_7 = async () => {
-//     const currentEMP = await roleIDNumber();
-//     inquirer.prompt([
-//         {    
-//          type: 'list',
-//          name: 'EmployeeRoleID',
-//          message: 'Please Select the Employee you will be updating',
-//         choices: currentEMP,
-//         },
-//     ])
-//     .then(answer => 
-//         {
-//             connection.query(
-//                     `DELETE FROM role_id WHERE (title) = (?)`,
-//                     answer.companyRole,
-//                     function(err, res)
-//                     {
-//                         if (err) throw err;
-//                         console.log(`You just DELETED the following new Compnay Department ${answer.companyRole}`);
-//                         query_employee_db()
-//                     }
-//             );
-//         }
-//     );    
-// }; 
+}
+// Select from the employee list created above to update their role_id & title
+const sqlQuery_7 = async () => {
+    const currentEMP = await roleIDNumber();
+    inquirer.prompt([
+        {    
+         type: 'list',
+         name: 'employee_full_Name', // this is the array from the await
+         message: 'Please Select the Employee you want to update their Role ID #',
+         choices:  currentEMP,  
+        },
+        {
+         type: 'input',
+         name: 'role_id',  
+         message: "Note: after you have entered an ID, You can view the update by selecting the: \n \"View Employee Role_id & Manager_id\"  \n Now enter a number beween 1-100 to UPDATE the Employee role_id"   
+        },
+    ])
+    .then(answer => 
+        {  
+            // console.log(answer.employee_full_Name); // testing
+            const pass = answer.employee_full_Name;
+            // console.log(pass); // testing 
+            const arr2 = pass.split(" ")
+            // console.log(arr2);  // testing to confirm the split
+            // const nameSplit = answer.employee_full_name.split(' '); // split so I can identify in the query
+            // console.log(nameSplit);
+            // console.log(nameSplit); // testing
+            connection.query(
+                    `UPDATE employee SET role_id = '${answer.role_id}' WHERE first_name= '${arr2[0]}' AND last_name= '${arr2[1]}';`, 
+                    // `UPDATE employee SET role_id = 919 WHERE first_name='EMPTY' AND last_name='Suit';`,
+                    function(err, res)
+                    {
+                        if (err) throw err;
+                        // console.log(`You just updated ${xyz} Role_ID # to: ${n}`);
+                        query_employee_db()
+                    }
+            );
+        }
+    );    
+    // console.log('hi there') // testing
+}; 
 
 // *********************************************************************** //
 // *********************************************************************** //
